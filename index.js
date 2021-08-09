@@ -1,24 +1,10 @@
 
 const taskContainer=document.querySelector(".task_container");
 
-let globalTaskData = [];
+let globalTaskData = []; //array to store the task data
 
-const addNewCard = () =>
-{
-    //get data
-    const taskData={
-        id: `${Date.now()}`,
-        title: document.getElementById("taskTitle").value,
-        image: document.getElementById("imageURL").value,
-        type: document.getElementById("taskType").value,
-        description: document.getElementById("taskDescription").value,
-    };
+const generateHTML = (taskData) =>
 
-    
-
-    //generate html code
-
-    const newcard =
         `<div id="${taskData.id}" class="col-md-6 col-lg-4 mt-4  mb-4">
         <div class="card">
 
@@ -41,8 +27,33 @@ const addNewCard = () =>
         </div>
       </div>`;
 
-      //inject to DOM
+  const insertToDOM = (newcard) =>
       taskContainer.insertAdjacentHTML("beforeend",newcard);
+
+
+
+
+const addNewCard = () =>
+{
+    //get data
+    const taskData={
+        id: `${Date.now()}`,
+        title: document.getElementById("taskTitle").value,
+        image: document.getElementById("imageURL").value,
+        type: document.getElementById("taskType").value,
+        description: document.getElementById("taskDescription").value,
+    };
+
+    globalTaskData.push(taskData);
+
+    //update local storage
+    localStorage.setItem("tasky",JSON.stringify({cards: globalTaskData}));
+
+    //generate html code
+
+      const newcard = generateHTML(taskData);
+      //inject to DOM
+      insertToDOM(newcard);
 
       //clear the form
       document.getElementById("taskTitle").value="";
@@ -54,16 +65,36 @@ const addNewCard = () =>
     
 };
 //funtion to execute onload
-
-const loadExistingCards=() =>
+const loadExistingCards = () =>
 {
-
   //check local storage
+  const getdata= localStorage.getItem("tasky");
+
+  //parse json data, it exists
+  if(!getdata) 
+   return;
+
+  const taskCards = JSON.parse(getdata);
+
+  globalTaskData= taskCards.cards;
   
-  //retrieve data, if exist
+  globalTaskData.map((taskData) =>
+  {
+     //generate HTML
+     const newcard = generateHTML(taskData);
+       
+      //inject to DOM
+      insertToDOM(newcard);
+      
+      return;
+
+
+
+  });
+};
+
 
   //generate HTML code
 
   //inject to the dom
 
-} 
