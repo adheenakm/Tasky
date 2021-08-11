@@ -88,13 +88,5 @@ const loadExistingCards = () =>
       
       return;
 
-
-
   });
 };
-
-
-  //generate HTML code
-
-  //inject to the dom
-
